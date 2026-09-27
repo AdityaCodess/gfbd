@@ -163,6 +163,24 @@ function buildFramePaths(
 
 }
 
+/* ============================================================
+   AUTOMATIC BACKGROUND MUSIC
+============================================================ */
+const bgMusic = document.getElementById("bgMusic");
+
+function startAudio() {
+    if (!bgMusic) return;
+    bgMusic.volume = 0.55;
+    bgMusic.play().catch(() => {});
+}
+
+// Attempt immediate playback on load
+window.addEventListener("load", startAudio);
+
+// Browser safety: if autoplay is blocked, start on the very first touch/click anywhere
+["click", "touchstart", "pointerdown"].forEach(eventType => {
+    document.addEventListener(eventType, startAudio, { once: true });
+});
 
 const FRAME_PATHS = {
 
@@ -341,7 +359,7 @@ const MEMORIES = [
             "assets/decor/1.jpeg",
 
         title:
-            "that sunny day",
+            "that one evening",
 
         date:
             "always smiling ♡"
@@ -357,7 +375,7 @@ const MEMORIES = [
             "assets/decor/2.jpeg",
 
         title:
-            "night walks",
+            "kamarpaglu boyfriend",
 
         date:
             "favorite moments ♡"
@@ -389,7 +407,7 @@ const MEMORIES = [
             "assets/decor/4.jpeg",
 
         title:
-            "adventures",
+            "kamarpaglu boyfriend part 2",
 
         date:
             "to many more ♡"
