@@ -1,0 +1,4832 @@
+/* ============================================================
+   RESET
+============================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+
+body {
+    overflow: hidden;
+
+    background: #f2ded3;
+
+    color: #60443a;
+
+    font-family:
+        "Trebuchet MS",
+        "Arial Rounded MT Bold",
+        Arial,
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+button,
+input {
+    font: inherit;
+}
+
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ============================================================
+   VARIABLES
+============================================================ */
+
+:root {
+
+    --cream: #fff9f1;
+    --cream-2: #f9ece2;
+
+    --wall: #fffaf3;
+
+    --floor: #d8b396;
+    --floor-dark: #bd9477;
+
+    --pink: #ee9da5;
+    --pink-soft: #f5d3d1;
+    --pink-deep: #d47e85;
+
+    --brown: #60443a;
+    --brown-dark: #422f29;
+    --brown-soft: #8e6f63;
+
+    --yellow: #f4d477;
+
+    --blue: #a8dce9;
+
+    --green: #8fc67d;
+    --green-dark: #5f8f5d;
+
+    --white: #fffdf9;
+
+}
+
+
+/* ============================================================
+   SCENES
+============================================================ */
+
+#app {
+    width: 100%;
+    height: 100%;
+}
+
+
+.scene,
+.modal-scene {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100dvh;
+
+    overflow: hidden;
+}
+
+
+.scene {
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity .45s ease,
+        visibility .45s ease;
+}
+
+
+.scene.active {
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+
+.modal-scene {
+    z-index: 500;
+
+    display: none;
+
+    place-items: center;
+
+    padding: 18px;
+
+    background:
+        rgba(65,46,41,.27);
+
+    backdrop-filter:
+        blur(8px);
+}
+
+
+.modal-scene.active {
+    display: grid;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+/* ============================================================
+   GENERAL UI
+============================================================ */
+
+.tiny-title {
+    color: var(--pink-deep);
+
+    font-size:
+        clamp(9px,1.2vw,12px);
+
+    font-weight: 900;
+
+    letter-spacing: .18em;
+
+    text-transform: uppercase;
+}
+
+
+.primary-button {
+    min-height: 49px;
+
+    padding:
+        12px 20px;
+
+    border:
+        2px solid var(--brown);
+
+    border-radius:
+        14px;
+
+    background:
+        var(--brown);
+
+    color: white;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 5px 0 var(--brown-dark);
+
+    transition:
+        transform .14s ease,
+        box-shadow .14s ease;
+}
+
+
+.primary-button:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 7px 0 var(--brown-dark);
+}
+
+
+.primary-button:active {
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 2px 0 var(--brown-dark);
+}
+
+
+.close-button {
+    position: absolute;
+
+    z-index: 50;
+
+    top: 15px;
+    right: 15px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        #f1dfd1;
+
+    color:
+        var(--brown);
+
+    font-size: 23px;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   CHARACTER SYSTEM (ACCURATE FLOOR GROUNDING & ANIMATIONS)
+============================================================ */
+
+.character {
+    position: absolute;
+    z-index: 70;
+    pointer-events: none;
+    user-select: none;
+    will-change: left;
+    transform-origin: bottom center;
+}
+
+.character::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 20%;
+    right: 20%;
+    bottom: 0px; /* Sticks shadow right at the feet */
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(82, 57, 48, .22);
+    filter: blur(2px);
+    transform: scaleX(0.85);
+}
+
+
+.character img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+
+    transform-origin: bottom center;
+}
+
+
+/* SOURCE ART FACES LEFT */
+
+.character.facing-left img {
+    transform:
+        scaleX(1);
+}
+
+
+.character.facing-right img {
+    transform:
+        scaleX(-1);
+}
+
+
+/* Natural ground-anchored breathing */
+
+.character.character-idle img {
+    animation:
+        characterBreath 2.6s ease-in-out infinite;
+}
+
+
+.character.facing-right.character-idle img {
+    animation:
+        characterBreathRight 2.6s ease-in-out infinite;
+}
+
+
+.character.character-running img {
+    animation:
+        characterBob 0.32s ease-in-out infinite alternate;
+}
+
+
+@keyframes characterBreath {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    50% {
+        transform: scaleY(1.03) scaleX(0.98);
+    }
+
+}
+
+
+@keyframes characterBreathRight {
+
+    0%,
+    100% {
+        transform: scaleX(-1) scaleY(1);
+    }
+
+    50% {
+        transform: scaleX(-0.98) scaleY(1.03);
+    }
+
+}
+
+
+@keyframes characterBob {
+
+    0% {
+        margin-top: 0;
+    }
+
+    100% {
+        margin-top: -3px;
+    }
+
+}
+
+
+/* ============================================================
+   INTRO
+============================================================ */
+
+.birthday-room {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    background:
+        #f7ddd6;
+}
+
+
+.room-floor {
+    position: absolute;
+
+    z-index: 10;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 27%;
+
+    background:
+        var(--floor);
+
+    border-top:
+        4px solid rgba(96,68,58,.12);
+}
+
+
+.room-floor::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: .10;
+
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            rgba(96,68,58,.22) 0,
+            rgba(96,68,58,.22) 1px,
+            transparent 1px,
+            transparent 80px
+        );
+}
+
+
+.floor-rug {
+    position: absolute;
+
+    left: 50%;
+    top: 28%;
+
+    transform:
+        translateX(-50%);
+
+    width:
+        min(480px,42vw);
+
+    height: 58px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,246,234,.50);
+
+    border:
+        2px solid rgba(96,68,58,.08);
+}
+
+
+/* ============================================================
+   FLOWERS
+============================================================ */
+
+.floor-flower {
+    position: absolute;
+
+    width: 34px;
+    height: 34px;
+
+    top: 42%;
+
+    transform:
+        scale(.75);
+}
+
+
+.flower-a {
+    left: 10%;
+}
+
+
+.flower-b {
+    left: 49%;
+}
+
+
+.flower-c {
+    right: 9%;
+}
+
+
+.floor-flower span,
+.flower span {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 17px;
+    height: 17px;
+
+    border-radius: 50%;
+
+    background:
+        #eca0a5;
+
+    transform:
+        translate(-50%,-50%)
+        rotate(var(--r))
+        translateY(-8px);
+
+    transform-origin:
+        center 16px;
+}
+
+
+.floor-flower span:nth-child(1),
+.flower span:nth-child(1) {
+    --r: 0deg;
+}
+
+
+.floor-flower span:nth-child(2),
+.flower span:nth-child(2) {
+    --r: 72deg;
+}
+
+
+.floor-flower span:nth-child(3),
+.flower span:nth-child(3) {
+    --r: 144deg;
+}
+
+
+.floor-flower span:nth-child(4),
+.flower span:nth-child(4) {
+    --r: 216deg;
+}
+
+
+.floor-flower span:nth-child(5),
+.flower span:nth-child(5) {
+    --r: 288deg;
+}
+
+
+.floor-flower i,
+.flower i {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    background:
+        var(--yellow);
+
+    z-index: 3;
+}
+
+
+/* ============================================================
+   WINDOW
+============================================================ */
+
+.window {
+    position: absolute;
+
+    z-index: 3;
+
+    left: 7%;
+    top: 11%;
+
+    width:
+        clamp(205px,22vw,325px);
+
+    height:
+        clamp(175px,28vh,260px);
+
+    border:
+        11px solid #f8efe6;
+
+    background:
+        #a4dbe8;
+
+    box-shadow:
+        0 12px 30px rgba(96,68,58,.07);
+}
+
+
+.window-sky {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #92d5e9,
+            #d7f0f5
+        );
+}
+
+
+.window-frame {
+    position: absolute;
+
+    z-index: 3;
+
+    background:
+        #f8efe6;
+}
+
+
+.frame-vertical {
+    left: 50%;
+
+    top: 0;
+    bottom: 0;
+
+    width: 8px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.frame-horizontal {
+    top: 50%;
+
+    left: 0;
+    right: 0;
+
+    height: 8px;
+
+    transform:
+        translateY(-50%);
+}
+
+
+.window-curtain {
+    position: absolute;
+
+    z-index: 6;
+
+    top: -10px;
+
+    width: 40px;
+
+    height:
+        calc(100% + 20px);
+
+    background:
+        #eeb6bd;
+}
+
+
+.curtain-left {
+    left: -13px;
+}
+
+
+.curtain-right {
+    right: -13px;
+}
+
+
+.window-moon {
+    position: absolute;
+
+    right: 15%;
+    top: 14%;
+
+    color:
+        #fff0b7;
+
+    font-size: 34px;
+}
+
+
+.window-star {
+    position: absolute;
+
+    color: white;
+
+    opacity: .75;
+}
+
+
+.star-a {
+    left: 20%;
+    top: 20%;
+}
+
+
+.star-b {
+    right: 16%;
+    bottom: 18%;
+}
+
+
+/* ============================================================
+   INTRO GARLAND
+============================================================ */
+
+.garland {
+    position: absolute;
+
+    z-index: 20;
+
+    left: 36%;
+    right: 8%;
+    top: 6%;
+
+    display: flex;
+
+    justify-content:
+        space-around;
+
+    color:
+        var(--pink-deep);
+}
+
+
+.garland::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: 11px;
+
+    height: 2px;
+
+    background:
+        rgba(96,68,58,.16);
+}
+
+
+.garland span {
+    position: relative;
+
+    z-index: 2;
+
+    padding:
+        0 7px;
+
+    background:
+        #f7ddd6;
+}
+
+
+/* ============================================================
+   INTRO SIGN
+============================================================ */
+
+.birthday-sign {
+    position: absolute;
+
+    z-index: 25;
+
+    left: 50%;
+    top: 9%;
+
+    transform:
+        translateX(-50%)
+        rotate(-1deg);
+
+    width:
+        clamp(210px,27vw,355px);
+
+    padding:
+        19px 25px 17px;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius: 7px;
+
+    background:
+        #fff7e9;
+
+    box-shadow:
+        0 10px 0 rgba(96,68,58,.07);
+
+    text-align:
+        center;
+}
+
+
+.sign-tape {
+    position: absolute;
+
+    left: 50%;
+    top: -8px;
+
+    width: 48px;
+    height: 15px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        #ebc1b9;
+}
+
+
+.sign-small {
+    display: block;
+
+    color:
+        var(--pink-deep);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: .17em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.birthday-sign strong {
+    display: block;
+
+    margin:
+        7px 0 10px;
+
+    color:
+        var(--brown);
+
+    font-size:
+        clamp(22px,3vw,37px);
+
+    line-height: .95;
+}
+
+
+/* ============================================================
+   INTRO SHELF
+============================================================ */
+
+.shelf {
+    position: absolute;
+
+    z-index: 17;
+
+    left: 8%;
+    top: 39%;
+
+    width:
+        clamp(180px,19vw,255px);
+
+    height: 120px;
+}
+
+
+.shelf-board {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 17px;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius: 6px;
+
+    background:
+        #b9785d;
+}
+
+
+.shelf-leg {
+    position: absolute;
+
+    bottom:
+        -50px;
+
+    width: 10px;
+    height: 52px;
+
+    background:
+        #a76e55;
+
+    border:
+        3px solid var(--brown);
+
+    border-top: none;
+}
+
+
+.leg-left {
+    left: 17px;
+}
+
+
+.leg-right {
+    right: 17px;
+}
+
+
+.shelf-item {
+    position: absolute;
+
+    bottom: 19px;
+
+    font-size: 32px;
+}
+
+
+.item-plant {
+    left: 22px;
+}
+
+
+.item-photo {
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    display: grid;
+
+    place-items: center;
+
+    width: 46px;
+    height: 52px;
+
+    background:
+        #fffaf1;
+
+    border:
+        3px solid var(--brown);
+}
+
+
+.item-teddy-mini {
+    right: 16px;
+}
+
+
+/* ============================================================
+   INTRO TABLE
+============================================================ */
+
+.side-table {
+    position: absolute;
+
+    z-index: 16;
+
+    right: 27%;
+    bottom: 27%;
+
+    width: 90px;
+    height: 145px;
+}
+
+
+.table-top {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    top: 33px;
+
+    height: 17px;
+
+    background:
+        #c1876c;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius: 5px;
+}
+
+
+.table-leg {
+    position: absolute;
+
+    top: 48px;
+
+    width: 10px;
+    height: 97px;
+
+    background:
+        #a86e55;
+
+    border:
+        3px solid var(--brown);
+
+    border-top: 0;
+}
+
+
+.table-leg-a {
+    left: 16px;
+}
+
+
+.table-leg-b {
+    right: 16px;
+}
+
+
+.lamp {
+    position: absolute;
+
+    left: 50%;
+    top: -22px;
+
+    width: 60px;
+    height: 70px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.lamp-shade {
+    position: absolute;
+
+    left: 50%;
+    top: 0;
+
+    width: 53px;
+    height: 36px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        #f2c3ae;
+
+    border:
+        3px solid var(--brown);
+
+    clip-path:
+        polygon(
+            18% 0,
+            82% 0,
+            100% 100%,
+            0 100%
+        );
+}
+
+
+.lamp-stem {
+    position: absolute;
+
+    top: 34px;
+    left: 50%;
+
+    width: 6px;
+    height: 27px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        var(--brown);
+}
+
+
+.lamp-base {
+    position: absolute;
+
+    left: 50%;
+    bottom: 0;
+
+    width: 34px;
+    height: 7px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        var(--brown);
+}
+
+
+/* ============================================================
+   INTRO PLANT
+============================================================ */
+
+.plant {
+    position: absolute;
+
+    z-index: 17;
+
+    right: 7%;
+    bottom: 27%;
+
+    width: 95px;
+    height: 135px;
+}
+
+
+.plant-leaf {
+    position: absolute;
+
+    bottom: 55px;
+
+    width: 34px;
+    height: 68px;
+
+    border:
+        3px solid #4b764e;
+
+    border-radius:
+        100% 0 100% 0;
+
+    background:
+        #86bf79;
+
+    transform-origin:
+        bottom center;
+}
+
+
+.leaf-a {
+    left: 40px;
+    transform:
+        rotate(-35deg);
+}
+
+
+.leaf-b {
+    left: 28px;
+    transform:
+        rotate(-12deg);
+}
+
+
+.leaf-c {
+    left: 46px;
+    transform:
+        rotate(14deg);
+}
+
+
+.leaf-d {
+    left: 57px;
+    transform:
+        rotate(35deg);
+}
+
+
+.plant-pot {
+    position: absolute;
+
+    left: 24px;
+    bottom: 0;
+
+    width: 48px;
+    height: 55px;
+
+    border:
+        3px solid var(--brown);
+
+    background:
+        #d48a70;
+
+    clip-path:
+        polygon(
+            8% 0,
+            92% 0,
+            80% 100%,
+            20% 100%
+        );
+}
+
+
+/* ============================================================
+   INTRO PHOTOS
+============================================================ */
+
+.wall-photo {
+    position: absolute;
+
+    z-index: 10;
+
+    width: 80px;
+    height: 95px;
+
+    background:
+        #fffdf8;
+
+    border:
+        2px solid #ead9cb;
+
+    display: grid;
+
+    place-items: center;
+
+    color:
+        var(--pink-deep);
+
+    box-shadow:
+        0 8px 18px rgba(96,68,58,.06);
+}
+
+
+.photo-one {
+    right: 25%;
+    top: 24%;
+
+    transform:
+        rotate(4deg);
+}
+
+
+.photo-two {
+    right: 10%;
+    top: 34%;
+
+    transform:
+        rotate(-5deg);
+}
+
+
+/* ============================================================
+   BALLOONS
+============================================================ */
+
+.balloon {
+    position: absolute;
+
+    z-index: 12;
+
+    width: 46px;
+    height: 58px;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius:
+        50% 50% 47% 47%;
+
+    animation:
+        balloonFloat 3.2s ease-in-out infinite;
+}
+
+
+.balloon::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: -47px;
+
+    width: 1px;
+    height: 47px;
+
+    background:
+        rgba(96,68,58,.20);
+}
+
+
+.balloon span {
+    position: absolute;
+
+    left: 7px;
+    top: 8px;
+
+    width: 10px;
+    height: 16px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.45);
+
+    transform:
+        rotate(-20deg);
+}
+
+
+.balloon-pink {
+    right: 6%;
+    top: 15%;
+
+    background:
+        #eda0a7;
+}
+
+
+.balloon-yellow {
+    right: 12%;
+    top: 20%;
+
+    background:
+        #f2d37c;
+
+    animation-delay: .5s;
+}
+
+
+.balloon-blue {
+    right: 18%;
+    top: 14%;
+
+    background:
+        #a5dce9;
+
+    animation-delay: 1s;
+}
+
+
+@keyframes balloonFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0);
+    }
+
+    50% {
+        transform:
+            translateY(-7px);
+    }
+
+}
+
+
+/* ============================================================
+   FIRST GIFT
+============================================================ */
+
+.first-gift {
+    position: absolute;
+
+    z-index: 60;
+
+    right: 43%;
+    bottom: 27%;
+
+    border: none;
+
+    background: transparent;
+
+    color:
+        var(--brown);
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease;
+}
+
+
+.first-gift:hover {
+    transform:
+        translateY(-6px);
+}
+
+
+.first-gift-box {
+    position: relative;
+
+    width:
+        clamp(100px,11vw,145px);
+
+    aspect-ratio: 1;
+}
+
+
+.first-gift-body {
+    position: absolute;
+
+    left: 8%;
+    right: 8%;
+    bottom: 0;
+
+    height: 70%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 8px;
+
+    background:
+        var(--pink);
+}
+
+
+.first-gift-lid {
+    position: absolute;
+
+    z-index: 5;
+
+    left: 3%;
+    right: 3%;
+    top: 15%;
+
+    height: 25%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 7px;
+
+    background:
+        #e78c95;
+}
+
+
+.first-gift-ribbon-v {
+    position: absolute;
+
+    z-index: 7;
+
+    left: 43%;
+    top: 15%;
+    bottom: 2%;
+
+    width: 15%;
+
+    background:
+        var(--yellow);
+}
+
+
+.first-gift-ribbon-h {
+    position: absolute;
+
+    z-index: 7;
+
+    left: 4%;
+    right: 4%;
+    top: 22%;
+
+    height: 12%;
+
+    background:
+        var(--yellow);
+}
+
+
+.first-gift-bow {
+    position: absolute;
+
+    z-index: 10;
+
+    left: 50%;
+    top: 0;
+
+    width: 62px;
+    height: 30px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.first-gift-bow::before,
+.first-gift-bow::after {
+    content: "";
+
+    position: absolute;
+
+    width: 34px;
+    height: 24px;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius:
+        80% 20% 60% 40%;
+
+    background:
+        var(--yellow);
+}
+
+
+.first-gift-bow::before {
+    left: 0;
+
+    transform:
+        rotate(-23deg);
+}
+
+
+.first-gift-bow::after {
+    right: 0;
+
+    transform:
+        scaleX(-1)
+        rotate(-23deg);
+}
+
+
+.present-label {
+    display: block;
+
+    margin-top: 8px;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+.room-message {
+    position: absolute;
+
+    z-index: 80;
+
+    left: 50%;
+    bottom: 3%;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+
+    gap: 12px;
+
+    white-space:
+        nowrap;
+
+    color:
+        var(--brown);
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.room-message span {
+    opacity: .45;
+}
+
+
+.room-message button {
+    border: none;
+
+    background: transparent;
+
+    color:
+        var(--brown);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    cursor:
+        pointer;
+}
+
+
+/* ============================================================
+   INTRO CHARACTERS
+============================================================ */
+
+.intro-bunny {
+    left: 9%;
+    bottom: 21%; /* lowered from 27% */
+    width: clamp(105px, 11vw, 155px);
+    aspect-ratio: 1;
+}
+
+.intro-teddy {
+    left: 74%;
+    bottom: 21%; /* lowered from 27% */
+    width: clamp(105px, 11vw, 155px);
+    aspect-ratio: 1;
+}
+
+/* ============================================================
+   WEBSITE
+============================================================ */
+
+.website-gift-world {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    background:
+        #f7ddd6;
+}
+
+
+.website-gift-copy {
+    position: absolute;
+
+    z-index: 30;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    width:
+        min(600px,82vw);
+
+    text-align: center;
+}
+
+
+.website-gift-copy h2 {
+    margin-top: 8px;
+
+    color:
+        var(--brown);
+
+    font-size:
+        clamp(40px,6vw,68px);
+
+    letter-spacing:
+        -.05em;
+}
+
+
+.website-gift-copy p {
+    margin-top: 13px;
+
+    color:
+        var(--brown-soft);
+
+    font-size: 15px;
+}
+
+
+.website-gift-copy .small-copy {
+    margin-top: 5px;
+
+    opacity: .72;
+}
+
+
+.website-gift-copy .primary-button {
+    margin-top: 24px;
+}
+
+
+.website-bunny {
+    left: 25%;
+    bottom: 21%;
+
+    width: 140px;
+
+    aspect-ratio: 1;
+}
+
+
+.website-teddy {
+    left: 69%;
+    bottom: 21%;
+
+    width: 140px;
+
+    aspect-ratio: 1;
+}
+
+
+/* ============================================================
+   MAIN WORLD
+============================================================ */
+
+.world {
+    position: absolute;
+
+    inset: 0;
+
+    padding:
+        clamp(20px,3.5vw,50px);
+
+    background:
+        #f2ded3;
+}
+
+
+.world-room {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    border:
+        3px solid rgba(96,68,58,.12);
+
+    border-radius: 28px;
+
+    background:
+        var(--wall);
+
+    box-shadow:
+        0 22px 65px rgba(77,51,43,.13);
+}
+
+
+/* ============================================================
+   ILLUSTRATED AESTHETIC WALL DECOR (ROOM WALL)
+============================================================ */
+
+.world-decor {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 12;
+
+    pointer-events: none;
+}
+
+
+.world-decor-item {
+    position: absolute;
+
+    transform-origin:
+        center;
+
+    pointer-events: none;
+
+    animation:
+        decorBreath 5s ease-in-out infinite;
+}
+
+
+.world-decor-item:nth-child(2) {
+    animation-delay:
+        -.9s;
+}
+
+
+.world-decor-item:nth-child(3) {
+    animation-delay:
+        -1.8s;
+}
+
+
+.world-decor-item:nth-child(4) {
+    animation-delay:
+        -2.7s;
+}
+
+
+@keyframes decorBreath {
+
+    0%,
+    100% {
+        margin-top: 0;
+    }
+
+    50% {
+        margin-top: 2px;
+    }
+
+}
+
+
+.decor-card-art {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px 8px;
+
+    background: #fffdf9;
+
+    border: 2px solid #eadbcf;
+
+    border-radius: 14px;
+
+    box-shadow: 0 6px 16px rgba(96, 68, 58, 0.08);
+
+    text-align: center;
+}
+
+
+.decor-art-emoji {
+    font-size: 26px;
+
+    line-height: 1;
+
+    margin-bottom: 4px;
+}
+
+
+.decor-art-label {
+    font-size: 9px;
+
+    font-weight: 900;
+
+    color: var(--brown);
+
+    letter-spacing: 0.02em;
+}
+
+
+.decor-art-sub {
+    font-size: 7.5px;
+
+    color: var(--pink-deep);
+
+    margin-top: 2px;
+}
+
+
+/* ============================================================
+   WORLD BUNTING
+============================================================ */
+
+.world-bunting {
+    position: absolute;
+
+    z-index: 20;
+
+    left: 26%;
+    right: 9%;
+    top: 3%;
+
+    display: flex;
+
+    justify-content:
+        space-around;
+}
+
+
+.world-bunting::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: 7px;
+
+    height: 2px;
+
+    background:
+        rgba(96,68,58,.14);
+}
+
+
+.world-bunting span {
+    position: relative;
+
+    width: 0;
+    height: 0;
+
+    border-left:
+        10px solid transparent;
+
+    border-right:
+        10px solid transparent;
+
+    border-top:
+        18px solid #ed9da5;
+}
+
+
+.world-bunting span:nth-child(2n) {
+    border-top-color:
+        #f1d27b;
+}
+
+
+.world-bunting span:nth-child(3n) {
+    border-top-color:
+        #a7dbe6;
+}
+
+
+/* ============================================================
+   WORLD TITLE
+============================================================ */
+
+.world-title {
+    position: absolute;
+
+    z-index: 40;
+
+    left: 50%;
+    top: 3%;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        8px 16px;
+
+    border-radius:
+        999px;
+
+    background:
+        #f7e4d7;
+
+    color:
+        var(--brown);
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing:
+        .15em;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* ============================================================
+   CLOCK
+============================================================ */
+
+.world-clock {
+    position: absolute;
+
+    z-index: 13;
+
+    right: 11%;
+    top: 11%;
+
+    width: 67px;
+    height: 67px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+        5px solid #c88d73;
+
+    border-radius: 50%;
+
+    background:
+        #fffaf4;
+
+    box-shadow:
+        0 5px 0 rgba(96,68,58,.06);
+}
+
+
+.clock-face {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+.clock-face::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 7px;
+    height: 7px;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius: 50%;
+
+    background:
+        var(--brown);
+}
+
+
+.clock-hand {
+    position: absolute;
+
+    left: 50%;
+    bottom: 50%;
+
+    width: 3px;
+
+    transform-origin:
+        bottom;
+
+    background:
+        var(--brown);
+
+    border-radius: 4px;
+}
+
+
+.clock-hand.hour {
+    height: 18px;
+
+    transform:
+        translateX(-50%)
+        rotate(25deg);
+}
+
+
+.clock-hand.minute {
+    height: 23px;
+
+    transform:
+        translateX(-50%)
+        rotate(125deg);
+}
+
+
+/* ============================================================
+   WORLD WINDOW
+============================================================ */
+
+.world-window {
+    position: absolute;
+
+    z-index: 8;
+
+    left: 6%;
+    top: 14%;
+
+    width:
+        clamp(190px,20vw,305px);
+
+    height:
+        clamp(160px,24vh,235px);
+
+    border:
+        11px solid #f5eee5;
+
+    background:
+        #a4dce9;
+
+    box-shadow:
+        0 9px 25px rgba(96,68,58,.08);
+}
+
+
+.world-window-sky {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #94d4e8,
+            #d9eff3
+        );
+}
+
+
+.window-cross {
+    position: absolute;
+
+    z-index: 8;
+
+    background:
+        #f5eee5;
+}
+
+
+.window-cross.vertical {
+    top: 0;
+    bottom: 0;
+
+    left: 50%;
+
+    width: 7px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.window-cross.horizontal {
+    left: 0;
+    right: 0;
+
+    top: 50%;
+
+    height: 7px;
+
+    transform:
+        translateY(-50%);
+}
+
+
+.cloud {
+    position: absolute;
+
+    width: 59px;
+    height: 22px;
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(255,255,255,.73);
+}
+
+
+.cloud::before,
+.cloud::after {
+    content: "";
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    background:
+        inherit;
+}
+
+
+.cloud::before {
+    width: 29px;
+    height: 29px;
+
+    left: 10px;
+    bottom: 0;
+}
+
+
+.cloud::after {
+    width: 34px;
+    height: 34px;
+
+    right: 7px;
+    bottom: 0;
+}
+
+
+.cloud-one {
+    left: 13%;
+    top: 17%;
+}
+
+
+.cloud-two {
+    right: 7%;
+    top: 66%;
+
+    transform:
+        scale(.65);
+}
+
+
+.sun {
+    position: absolute;
+
+    width: 55px;
+    height: 55px;
+
+    right: 14%;
+    top: 17%;
+
+    border-radius: 50%;
+
+    background:
+        #f4d780;
+}
+
+
+.sky-spark {
+    position: absolute;
+
+    color: white;
+
+    opacity: .82;
+}
+
+
+.sky-one {
+    left: 20%;
+    bottom: 22%;
+}
+
+
+.sky-two {
+    right: 23%;
+    top: 49%;
+}
+
+
+/* ============================================================
+   WORLD SHELF
+============================================================ */
+
+.world-shelf {
+    position: absolute;
+
+    z-index: 18;
+
+    left: 7%;
+    top: 45%;
+
+    width:
+        clamp(180px,20vw,260px);
+
+    height: 115px;
+}
+
+
+.world-shelf-top {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 16px;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius: 5px;
+
+    background:
+        #b8795d;
+}
+
+
+.world-shelf-support {
+    position: absolute;
+
+    bottom: -47px;
+
+    width: 9px;
+    height: 49px;
+
+    background:
+        #a66d53;
+
+    border:
+        3px solid var(--brown);
+
+    border-top: none;
+}
+
+
+.world-shelf-support.left {
+    left: 18px;
+}
+
+
+.world-shelf-support.right {
+    right: 18px;
+}
+
+
+.shelf-decoration {
+    position: absolute;
+
+    bottom: 17px;
+}
+
+
+.vase {
+    left: 19px;
+
+    width: 45px;
+    height: 63px;
+}
+
+
+.vase-body {
+    position: absolute;
+
+    left: 7px;
+    bottom: 0;
+
+    width: 31px;
+    height: 40px;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius:
+        8px 8px 13px 13px;
+
+    background:
+        #d7a182;
+}
+
+
+.flower-mini {
+    position: absolute;
+
+    left: 50%;
+    top: 0;
+
+    transform:
+        translateX(-50%)
+        scale(.6);
+}
+
+
+.frame-mini {
+    left: 50%;
+
+    width: 42px;
+    height: 48px;
+
+    display: grid;
+
+    place-items: center;
+
+    transform:
+        translateX(-50%);
+
+    border:
+        3px solid var(--brown);
+
+    background:
+        #fffaf2;
+
+    color:
+        var(--pink-deep);
+
+    font-size: 18px;
+}
+
+
+.shelf-book {
+    position: absolute;
+
+    bottom: 17px;
+
+    width: 15px;
+
+    border-radius: 2px;
+
+    border:
+        2px solid var(--brown);
+}
+
+
+.book-one {
+    right: 51px;
+
+    height: 44px;
+
+    background:
+        #eca1a8;
+}
+
+
+.book-two {
+    right: 34px;
+
+    height: 36px;
+
+    background:
+        #a6dae7;
+}
+
+
+.book-three {
+    right: 17px;
+
+    height: 49px;
+
+    background:
+        #f2d174;
+}
+
+
+/* ============================================================
+   WORLD OBJECTS
+============================================================ */
+
+.world-object {
+    border: none;
+
+    background: transparent;
+
+    color:
+        var(--brown);
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease;
+}
+
+
+.world-object:hover {
+    transform:
+        translateY(-5px);
+}
+
+
+.world-object small {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+/* ============================================================
+   MEMORIES OBJECT
+============================================================ */
+
+.memory-object {
+    position: absolute;
+
+    z-index: 35;
+
+    left: 31%;
+    top: 59%;
+
+    width: 115px;
+
+    padding: 8px;
+
+    background:
+        #fffdf8;
+
+    box-shadow:
+        0 10px 20px rgba(96,68,58,.08);
+
+    transform:
+        rotate(-3deg);
+}
+
+
+.memory-frame {
+    padding: 4px;
+
+    background:
+        #eecfc9;
+}
+
+
+.memory-picture {
+    display: grid;
+
+    place-items: center;
+
+    aspect-ratio: 1;
+
+    background:
+        #f7e3dc;
+
+    font-size: 28px;
+}
+
+
+/* ============================================================
+   LETTER OBJECT
+============================================================ */
+
+.letter-object {
+    position: absolute;
+
+    z-index: 36;
+
+    left: 49%;
+    top: 54%;
+
+    text-align: center;
+}
+
+
+.letter-paper {
+    position: relative;
+
+    width: 75px;
+    height: 58px;
+
+    display: grid;
+
+    place-items: center;
+
+    background:
+        #f5d4d2;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius: 7px;
+}
+
+
+.letter-paper span {
+    font-size: 28px;
+}
+
+
+.letter-fold {
+    position: absolute;
+
+    left: 7px;
+    right: 7px;
+    top: 5px;
+
+    height: 24px;
+
+    border-bottom:
+        2px solid var(--brown);
+
+    clip-path:
+        polygon(
+            0 0,
+            50% 70%,
+            100% 0
+        );
+}
+
+
+/* ============================================================
+   GIFT OBJECT
+============================================================ */
+
+.world-present {
+    position: absolute;
+
+    z-index: 36;
+
+    right: 13%;
+    top: 57%;
+
+    padding: 8px;
+
+    text-align: center;
+}
+
+
+.world-gift-box {
+    position: relative;
+
+    width: 115px;
+    height: 100px;
+}
+
+
+.world-gift-body {
+    position: absolute;
+
+    left: 8%;
+    right: 8%;
+    bottom: 0;
+
+    height: 70%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 8px;
+
+    background:
+        var(--pink);
+}
+
+
+.world-gift-lid {
+    position: absolute;
+
+    z-index: 5;
+
+    left: 3%;
+    right: 3%;
+    top: 14%;
+
+    height: 25%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 7px;
+
+    background:
+        #e68b94;
+}
+
+
+.world-gift-ribbon {
+    position: absolute;
+
+    z-index: 7;
+
+    left: 43%;
+    top: 14%;
+    bottom: 2%;
+
+    width: 15%;
+
+    background:
+        var(--yellow);
+}
+
+
+.world-gift-bow {
+    position: absolute;
+
+    z-index: 10;
+
+    left: 50%;
+    top: 0;
+
+    width: 63px;
+    height: 30px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.world-gift-bow::before,
+.world-gift-bow::after {
+    content: "";
+
+    position: absolute;
+
+    width: 33px;
+    height: 24px;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius:
+        80% 20% 60% 40%;
+
+    background:
+        var(--yellow);
+}
+
+
+.world-gift-bow::before {
+    left: 0;
+
+    transform:
+        rotate(-23deg);
+}
+
+
+.world-gift-bow::after {
+    right: 0;
+
+    transform:
+        scaleX(-1)
+        rotate(-23deg);
+}
+
+
+/* ============================================================
+   WORLD TABLE
+============================================================ */
+
+.world-table {
+    position: absolute;
+
+    z-index: 26;
+
+    right: 31%;
+    bottom: 21%;
+
+    width: 85px;
+    height: 132px;
+}
+
+
+.world-table-top {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    top: 30px;
+
+    height: 16px;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius: 5px;
+
+    background:
+        #c58a6e;
+}
+
+
+.world-table-leg {
+    position: absolute;
+
+    top: 45px;
+
+    width: 10px;
+    height: 87px;
+
+    border:
+        3px solid var(--brown);
+
+    border-top: 0;
+
+    background:
+        #a96f55;
+}
+
+
+.table-a {
+    left: 15px;
+}
+
+
+.table-b {
+    right: 15px;
+}
+
+
+.world-lamp {
+    position: absolute;
+
+    left: 50%;
+    top: -24px;
+
+    width: 58px;
+    height: 68px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.world-lamp-shade {
+    position: absolute;
+
+    left: 50%;
+    top: 0;
+
+    width: 52px;
+    height: 35px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        #f2c1ac;
+
+    border:
+        3px solid var(--brown);
+
+    clip-path:
+        polygon(
+            18% 0,
+            82% 0,
+            100% 100%,
+            0 100%
+        );
+}
+
+
+.world-lamp-stem {
+    position: absolute;
+
+    left: 50%;
+    top: 33px;
+
+    width: 6px;
+    height: 27px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        var(--brown);
+}
+
+
+.world-lamp-base {
+    position: absolute;
+
+    left: 50%;
+    bottom: 0;
+
+    width: 34px;
+    height: 7px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        var(--brown);
+}
+
+
+/* ============================================================
+   WORLD PLANT
+============================================================ */
+
+.world-plant {
+    position: absolute;
+
+    z-index: 25;
+
+    right: 5%;
+    bottom: 20%;
+
+    width: 95px;
+    height: 145px;
+}
+
+
+.world-leaf {
+    position: absolute;
+
+    bottom: 52px;
+    left: 43px;
+
+    width: 35px;
+    height: 70px;
+
+    border:
+        3px solid var(--green-dark);
+
+    border-radius:
+        100% 0 100% 0;
+
+    background:
+        var(--green);
+
+    transform-origin:
+        bottom center;
+}
+
+
+.leaf-one {
+    transform:
+        rotate(-42deg);
+}
+
+
+.leaf-two {
+    transform:
+        rotate(-20deg);
+}
+
+
+.leaf-three {
+    transform:
+        rotate(0deg);
+}
+
+
+.leaf-four {
+    transform:
+        rotate(22deg);
+}
+
+
+.leaf-five {
+    transform:
+        rotate(44deg);
+}
+
+
+.world-pot {
+    position: absolute;
+
+    left: 24px;
+    bottom: 0;
+
+    width: 49px;
+    height: 56px;
+
+    border:
+        3px solid var(--brown);
+
+    background:
+        #d58b72;
+
+    clip-path:
+        polygon(
+            8% 0,
+            92% 0,
+            80% 100%,
+            20% 100%
+        );
+}
+
+
+/* ============================================================
+   FLOWER CLUSTERS
+============================================================ */
+
+.floor-flower-cluster {
+    position: absolute;
+
+    z-index: 21;
+
+    bottom: 20%;
+
+    width: 70px;
+    height: 80px;
+}
+
+
+.cluster-one {
+    left: 21%;
+}
+
+
+.cluster-two {
+    right: 22%;
+}
+
+
+.floor-flower-cluster .flower {
+    position: absolute;
+
+    left: 24px;
+    bottom: 36px;
+
+    width: 42px;
+    height: 42px;
+
+    transform:
+        scale(.75);
+}
+
+
+.floor-flower-cluster .flower.small {
+    left: 2px;
+    bottom: 26px;
+
+    transform:
+        scale(.52);
+}
+
+
+.floor-flower-cluster .stem {
+    position: absolute;
+
+    left: 45px;
+    bottom: 0;
+
+    width: 3px;
+    height: 47px;
+
+    background:
+        var(--green-dark);
+
+    transform:
+        rotate(8deg);
+
+    transform-origin:
+        bottom;
+}
+
+
+/* ============================================================
+   WORLD FLOOR
+============================================================ */
+
+.world-floor {
+    position: absolute;
+
+    z-index: 15;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 21%;
+
+    background:
+        var(--floor);
+
+    border-top:
+        4px solid rgba(96,68,58,.09);
+}
+
+
+.floor-board-line {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: 30%;
+
+    height: 2px;
+
+    background:
+        rgba(96,68,58,.08);
+}
+
+
+.rug {
+    position: absolute;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+}
+
+
+.rug-main {
+    top: 14%;
+
+    width:
+        min(430px,34vw);
+
+    height: 62px;
+
+    background:
+        #e9cfc2;
+
+    border:
+        3px solid rgba(96,68,58,.08);
+}
+
+
+.tiny-floor-heart {
+    position: absolute;
+
+    color:
+        rgba(96,68,58,.25);
+
+    font-size: 17px;
+}
+
+
+.heart-one {
+    left: 31%;
+    top: 55%;
+}
+
+
+.heart-two {
+    right: 37%;
+    top: 37%;
+}
+
+
+.heart-three {
+    right: 11%;
+    top: 61%;
+}
+
+
+/* ============================================================
+   WORLD CHARACTERS
+============================================================ */
+
+.world-bunny {
+    left: 18%;
+    bottom: 15%; /* lowered from 21% to touch floor */
+    width: clamp(110px, 12vw, 165px);
+    aspect-ratio: 1;
+}
+
+.world-teddy {
+    left: 69%;
+    bottom: 15%; /* lowered from 21% to touch floor */
+    width: clamp(115px, 13vw, 175px);
+    aspect-ratio: 1;
+}
+
+
+.world-hint {
+    position: absolute;
+
+    z-index: 90;
+
+    left: 50%;
+    bottom: 2%;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color:
+        rgba(96,68,58,.58);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    white-space:
+        nowrap;
+}
+
+
+.hint-divider {
+    opacity: .45;
+}
+
+
+/* ============================================================
+   MODALS
+============================================================ */
+
+.modal-card,
+.letter-card {
+    position: relative;
+
+    width:
+        min(940px,94vw);
+
+    max-height:
+        90dvh;
+
+    overflow-y:
+        auto;
+
+    padding:
+        clamp(28px,5vw,57px);
+
+    border:
+        2px solid #ead9cc;
+
+    border-radius:
+        28px;
+
+    background:
+        var(--white);
+
+    box-shadow:
+        0 30px 90px rgba(65,46,41,.18);
+}
+
+
+.memories-card {
+    position: relative;
+
+    width:
+        min(850px,94vw);
+
+    max-height:
+        90dvh;
+
+    overflow-y:
+        auto;
+
+    padding:
+        clamp(24px,4vw,42px);
+
+    border:
+        2px solid #ead9cc;
+
+    border-radius:
+        28px;
+
+    background:
+        var(--white);
+
+    box-shadow:
+        0 30px 90px rgba(65,46,41,.20);
+
+    text-align:
+        center;
+}
+
+
+.memories-heading h2,
+.letter-card h2 {
+    margin-top: 7px;
+
+    color:
+        var(--brown);
+
+    font-size:
+        clamp(38px,6vw,67px);
+
+    line-height: .92;
+
+    letter-spacing:
+        -.05em;
+}
+
+
+.memories-heading p {
+    margin-top: 8px;
+
+    color:
+        var(--brown-soft);
+
+    font-size:
+        13.5px;
+}
+
+
+/* ============================================================
+   MEMORIES GALLERY & POLAROIDS
+============================================================ */
+
+.memory-gallery {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 16px;
+
+    margin:
+        28px 0 18px;
+}
+
+
+.memory-polaroid {
+    border: none;
+
+    background: #fff;
+
+    padding: 10px 10px 14px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 24px rgba(96, 68, 58, 0.12);
+
+    border: 1px solid #ebdcd1;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease;
+
+    text-align: center;
+}
+
+
+.memory-polaroid:hover {
+    transform:
+        translateY(-6px) rotate(-1deg);
+
+    box-shadow:
+        0 14px 30px rgba(96, 68, 58, 0.18);
+}
+
+
+.polaroid-photo-frame {
+    width: 100%;
+
+    aspect-ratio: 1;
+
+    overflow: hidden;
+
+    border-radius: 6px;
+
+    background: #f7e9df;
+}
+
+
+.polaroid-photo-frame img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform 0.3s ease;
+}
+
+
+.memory-polaroid:hover .polaroid-photo-frame img {
+    transform: scale(1.05);
+}
+
+
+.polaroid-text {
+    margin-top: 10px;
+}
+
+
+.polaroid-text strong {
+    display: block;
+
+    color: var(--brown);
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.polaroid-text span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--pink-deep);
+
+    font-size: 10px;
+}
+
+
+.memory-caption {
+    color: var(--brown-soft);
+
+    font-size: 13px;
+
+    font-style: italic;
+
+    margin-top: 10px;
+}
+
+
+/* ============================================================
+   LIGHTBOX OVERLAY
+============================================================ */
+
+.memory-lightbox {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: grid;
+
+    place-items: center;
+
+    background: rgba(45, 30, 26, 0.7);
+
+    backdrop-filter: blur(8px);
+
+    padding: 20px;
+}
+
+
+.lightbox-polaroid {
+    position: relative;
+
+    max-width: 480px;
+
+    width: 100%;
+
+    background: white;
+
+    padding: 16px 16px 20px;
+
+    border-radius: 16px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+
+    text-align: center;
+}
+
+
+.lightbox-polaroid img {
+    width: 100%;
+
+    max-height: 60vh;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+}
+
+
+.lightbox-polaroid p {
+    margin-top: 14px;
+
+    color: var(--brown);
+
+    font-weight: 800;
+
+    font-size: 14px;
+}
+
+
+.lightbox-close {
+    top: 25px;
+
+    right: 25px;
+}
+
+
+/* ============================================================
+   LETTER
+============================================================ */
+
+.letter-card {
+    width:
+        min(810px,94vw);
+
+    background:
+        #fffdf8;
+}
+
+
+.letter-text {
+    max-width:
+        700px;
+
+    margin-top:
+        31px;
+
+    color:
+        #70584f;
+
+    line-height: 2;
+
+    font-size: 15px;
+}
+
+
+.letter-text p + p {
+    margin-top: 19px;
+}
+
+
+.letter-card .primary-button {
+    margin-top: 29px;
+}
+
+
+/* ============================================================
+   GIFT WORLD
+============================================================ */
+
+.gift-world {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+
+    background:
+        #f5dfd4;
+}
+
+
+.gift-header {
+    position: relative;
+
+    z-index: 30;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-end;
+
+    gap: 20px;
+
+    padding:
+        clamp(24px,5vw,48px);
+}
+
+
+.gift-header h2 {
+    margin-top: 6px;
+
+    color:
+        var(--brown);
+
+    font-size:
+        clamp(40px,6vw,70px);
+
+    line-height: .9;
+
+    letter-spacing:
+        -.05em;
+}
+
+
+.gift-header p {
+    margin-top: 7px;
+
+    color:
+        var(--brown-soft);
+
+    font-size: 13px;
+}
+
+
+.gift-header-actions {
+    display: flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        flex-end;
+
+    gap: 8px;
+}
+
+
+.gift-counter {
+    display: flex;
+
+    align-items:
+        baseline;
+
+    gap: 5px;
+
+    color:
+        var(--brown);
+}
+
+
+.gift-counter strong {
+    font-size:
+        clamp(38px,5vw,62px);
+
+    line-height: 1;
+}
+
+
+.gift-counter span {
+    font-size: 14px;
+
+    font-weight: 900;
+}
+
+
+.give-up-small,
+.give-up-button {
+    border: none;
+
+    background: transparent;
+
+    color:
+        var(--pink-deep);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    text-decoration:
+        underline;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   19 MYSTERY SLOTS
+============================================================ */
+
+.gift-objects {
+    position: absolute;
+
+    z-index: 20;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%,-41%);
+
+    width:
+        min(960px,91vw);
+
+    height: 56vh;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(6,1fr);
+
+    grid-auto-rows:
+        minmax(70px,1fr);
+
+    gap: 15px;
+}
+
+
+.gift-choice {
+    position: relative;
+
+    width:
+        clamp(70px,8vw,105px);
+
+    aspect-ratio: 1;
+
+    margin: auto;
+
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        opacity .18s ease;
+}
+
+
+.gift-choice:hover {
+    transform:
+        translateY(-8px)
+        rotate(-2deg);
+}
+
+
+.gift-choice.revealed {
+    opacity: .62;
+
+    cursor:
+        default;
+}
+
+
+.gift-shape {
+    position: absolute;
+
+    left: 8%;
+    right: 8%;
+    bottom: 3%;
+
+    height: 68%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 8px;
+}
+
+
+.gift-lid {
+    position: absolute;
+
+    z-index: 5;
+
+    left: 4%;
+    right: 4%;
+    top: 11%;
+
+    height: 24%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 7px;
+
+    background:
+        #e99198;
+}
+
+
+.gift-ribbon {
+    position: absolute;
+
+    z-index: 7;
+
+    left: 43%;
+    top: 11%;
+    bottom: 3%;
+
+    width: 14%;
+
+    background:
+        var(--yellow);
+}
+
+
+.gift-number {
+    position: absolute;
+
+    z-index: 10;
+
+    left: 50%;
+    bottom: -18px;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        4px 7px;
+
+    border-radius:
+        999px;
+
+    background:
+        white;
+
+    color:
+        var(--brown);
+
+    font-size: 9px;
+
+    font-weight: 900;
+}
+
+
+.gift-revealed-content {
+    position: absolute;
+
+    z-index: 20;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    pointer-events: none;
+}
+
+
+.gift-revealed-icon {
+    font-size:
+        clamp(30px,4vw,48px);
+}
+
+
+.gift-revealed-name {
+    max-width: 110px;
+
+    margin-top: 4px;
+
+    color:
+        var(--brown);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    text-align: center;
+}
+
+
+.gift-revealed-check {
+    position: absolute;
+
+    z-index: 30;
+
+    right: -6px;
+    top: -6px;
+
+    width: 24px;
+    height: 24px;
+
+    display: grid;
+
+    place-items: center;
+
+    border:
+        3px solid white;
+
+    border-radius: 50%;
+
+    background:
+        #8bc17d;
+
+    color: white;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+.gift-bunny {
+    left: 3%;
+    bottom: 18.5%;
+
+    width:
+        clamp(105px,13vw,175px);
+
+    aspect-ratio: 1;
+}
+
+
+.gift-teddy {
+    left: 71%;
+    bottom: 18.5%;
+
+    width:
+        clamp(110px,13vw,180px);
+
+    aspect-ratio: 1;
+}
+
+
+.gift-floor {
+    position: absolute;
+
+    z-index: 5;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 19%;
+
+    background:
+        #dfbea9;
+
+    border-top:
+        3px solid rgba(96,68,58,.08);
+}
+
+
+/* ============================================================
+   GUESS CARD
+============================================================ */
+
+.guess-scene {
+    z-index: 600;
+}
+
+
+.guess-card {
+    position: relative;
+
+    width:
+        min(700px,94vw);
+
+    max-height:
+        94dvh;
+
+    overflow-y:
+        auto;
+
+    padding:
+        24px 25px 28px;
+
+    border-radius:
+        29px;
+
+    background:
+        #fff8f0;
+
+    box-shadow:
+        0 35px 100px rgba(65,46,41,.24);
+
+    text-align:
+        center;
+}
+
+
+.guess-slot-text {
+    margin-top: 7px;
+
+    color:
+        var(--brown-soft);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing:
+        .08em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.guess-characters {
+    position: relative;
+
+    height: 88px;
+
+    margin-top: 3px;
+}
+
+
+.guess-bunny,
+.guess-teddy {
+    bottom: 0 !important;
+
+    width: 90px;
+    height: 101px;
+}
+
+
+.guess-bunny {
+    left: 20%;
+}
+
+
+.guess-teddy {
+    right: 20%;
+}
+
+
+.guess-present {
+    position: relative;
+
+    width: 150px;
+    height: 140px;
+
+    margin:
+        2px auto 15px;
+}
+
+
+.big-gift-body {
+    position: absolute;
+
+    left: 8%;
+    right: 8%;
+    bottom: 0;
+
+    height: 70%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 9px;
+
+    background:
+        var(--pink);
+}
+
+
+.big-gift-lid {
+    position: absolute;
+
+    z-index: 5;
+
+    left: 4%;
+    right: 4%;
+    top: 15%;
+
+    height: 25%;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius: 8px;
+
+    background:
+        #e99198;
+}
+
+
+.big-gift-ribbon {
+    position: absolute;
+
+    z-index: 7;
+
+    left: 43%;
+    top: 15%;
+    bottom: 2%;
+
+    width: 15%;
+
+    background:
+        var(--yellow);
+}
+
+
+.big-gift-bow {
+    position: absolute;
+
+    z-index: 9;
+
+    top: 0;
+    left: 50%;
+
+    width: 60px;
+    height: 29px;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.big-gift-bow::before,
+.big-gift-bow::after {
+    content: "";
+
+    position: absolute;
+
+    width: 32px;
+    height: 24px;
+
+    border:
+        4px solid var(--brown);
+
+    border-radius:
+        80% 20% 60% 40%;
+
+    background:
+        var(--yellow);
+}
+
+
+.big-gift-bow::before {
+    left: 0;
+
+    transform:
+        rotate(-23deg);
+}
+
+
+.big-gift-bow::after {
+    right: 0;
+
+    transform:
+        scaleX(-1)
+        rotate(-23deg);
+}
+
+
+.guess-card h2 {
+    color:
+        var(--brown);
+
+    font-size:
+        clamp(37px,6vw,58px);
+
+    line-height: .95;
+
+    letter-spacing:
+        -.05em;
+}
+
+
+.guess-subtitle {
+    margin-top: 7px;
+
+    color:
+        var(--brown-soft);
+
+    font-size: 13px;
+}
+
+
+.heard-text {
+    min-height: 31px;
+
+    margin-top: 15px;
+
+    color:
+        #8c6d63;
+
+    font-size: 13px;
+}
+
+
+.speak-button {
+    width:
+        min(500px,100%);
+
+    min-height: 58px;
+
+    margin-top: 4px;
+
+    border:
+        3px solid var(--brown);
+
+    border-radius: 17px;
+
+    background:
+        #f7d4d2;
+
+    color:
+        var(--brown);
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        background .15s ease,
+        opacity .15s ease;
+}
+
+
+.speak-button:hover {
+    transform:
+        translateY(-2px);
+}
+
+
+.speak-button:disabled {
+    opacity: .55;
+
+    cursor:
+        not-allowed;
+}
+
+
+.speak-button.listening {
+    background:
+        #e89299;
+
+    animation:
+        microphonePulse 1s ease-in-out infinite;
+}
+
+
+@keyframes microphonePulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 0 rgba(215,125,131,.25);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 10px rgba(215,125,131,0);
+    }
+
+}
+
+
+.type-divider {
+    width:
+        min(500px,100%);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin:
+        14px auto;
+
+    color:
+        #a88b80;
+
+    font-size: 11px;
+
+    font-weight: 900;
+}
+
+
+.type-divider::before,
+.type-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background:
+        #ead6c9;
+}
+
+
+.guess-input-row {
+    display: flex;
+
+    gap: 9px;
+
+    width:
+        min(500px,100%);
+
+    margin: auto;
+}
+
+
+.guess-input-row input {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 50px;
+
+    padding:
+        0 15px;
+
+    border:
+        2px solid #ead3c6;
+
+    border-radius: 15px;
+
+    outline: none;
+
+    background:
+        white;
+
+    color:
+        var(--brown);
+
+    font-size: 14px;
+}
+
+
+.guess-input-row input:focus {
+    border-color:
+        var(--pink-deep);
+}
+
+
+.guess-result {
+    min-height: 29px;
+
+    margin-top: 14px;
+
+    font-size: 17px;
+
+    font-weight: 900;
+}
+
+
+.guess-result.correct {
+    color:
+        #70a35e;
+}
+
+
+.guess-result.wrong {
+    color:
+        #c76770;
+}
+
+
+#nextButton {
+    margin-top: 8px;
+}
+
+
+.give-up-button {
+    display: block;
+
+    margin:
+        13px auto 0;
+}
+
+
+/* ============================================================
+   FINAL
+============================================================ */
+
+.final-scene {
+    display: grid;
+
+    place-items: center;
+
+    background:
+        #f7ddd6;
+
+    text-align:
+        center;
+}
+
+
+.final-content {
+    width:
+        min(680px,88vw);
+}
+
+
+.final-characters {
+    position: relative;
+
+    width: 280px;
+    height: 180px;
+
+    margin:
+        0 auto 5px;
+}
+
+
+.final-bunny {
+    left: 24%;
+    bottom: 5px;
+    width: 115px;
+    height: 125px;
+}
+
+.final-teddy {
+    right: 20%;
+    bottom: 5px;
+    width: 120px;
+    height: 130px;
+}
+
+
+.final-content h2 {
+    margin-top: 8px;
+
+    color:
+        var(--brown);
+
+    font-size:
+        clamp(46px,7vw,78px);
+
+    line-height: .92;
+
+    letter-spacing:
+        -.05em;
+}
+
+
+.final-content p {
+    max-width: 520px;
+
+    margin:
+        17px auto 0;
+
+    color:
+        var(--brown-soft);
+
+    font-size: 15px;
+
+    line-height: 1.6;
+}
+
+
+.final-note {
+    display: inline-block;
+
+    margin-top: 22px;
+
+    padding:
+        9px 14px;
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(255,255,255,.55);
+
+    color:
+        var(--brown);
+
+    font-size: 11px;
+
+    font-weight: 900;
+}
+
+
+/* ============================================================
+   TABLET LANDSCAPE
+============================================================ */
+
+@media (
+    min-width:900px
+) and (
+    orientation:landscape
+) {
+
+    .world {
+        padding: 24px;
+    }
+
+
+    .world-bunny {
+        width:
+            clamp(105px,10vw,145px);
+    }
+
+
+    .world-teddy {
+        width:
+            clamp(110px,11vw,155px);
+    }
+
+
+    .world-table {
+        right: 29%;
+    }
+
+}
+
+
+/* ============================================================
+   TABLET PORTRAIT
+============================================================ */
+
+@media (
+    min-width:650px
+) and (
+    orientation:portrait
+) {
+
+    .world {
+        padding: 16px;
+    }
+
+
+    .world-bunting {
+        left: 31%;
+    }
+
+
+    .world-window {
+        left: 5%;
+
+        width: 42vw;
+
+        height: 23vh;
+    }
+
+
+    .world-shelf {
+        top: 40%;
+
+        left: 5%;
+    }
+
+
+    .world-table {
+        right: 10%;
+    }
+
+
+    .world-plant {
+        right: 4%;
+    }
+
+
+    .world-bunny {
+        left: 19%;
+    }
+
+
+    .world-teddy {
+        left: 67%;
+    }
+
+
+    .world-decor-item {
+        width: 70px !important;
+    }
+
+
+    .memory-gallery {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .gift-objects {
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+}
+
+
+/* ============================================================
+   PHONE
+============================================================ */
+
+@media (max-width:649px) {
+
+    .world {
+        padding: 8px;
+    }
+
+
+    .world-room {
+        border-radius: 20px;
+    }
+
+
+    .world-title {
+        top: 2%;
+
+        font-size: 8px;
+    }
+
+
+    .world-bunting {
+        left: 33%;
+
+        right: 5%;
+    }
+
+
+    .world-clock {
+        width: 46px;
+        height: 46px;
+
+        border-width: 4px;
+    }
+
+
+    .world-window {
+        left: 4%;
+        top: 11%;
+
+        width: 145px;
+        height: 130px;
+
+        border-width: 8px;
+    }
+
+
+    .world-window .sun {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .world-decor-item {
+        width: 62px !important;
+    }
+
+
+    .decor-art-emoji {
+        font-size: 20px;
+    }
+
+
+    .decor-art-label {
+        font-size: 7.5px;
+    }
+
+
+    .decor-art-sub {
+        display: none;
+    }
+
+
+    .world-shelf {
+        left: 4%;
+        top: 39%;
+
+        transform:
+            scale(.75);
+
+        transform-origin:
+            left top;
+    }
+
+
+    .memory-object {
+        left: 31%;
+        top: 56%;
+
+        width: 82px;
+    }
+
+
+    .letter-object {
+        left: 50%;
+        top: 51%;
+    }
+
+
+    .letter-paper {
+        width: 62px;
+        height: 48px;
+    }
+
+
+    .world-present {
+        right: 9%;
+        top: 51%;
+    }
+
+
+    .world-gift-box {
+        width: 88px;
+        height: 80px;
+    }
+
+
+    .world-table {
+        right: 28%;
+        bottom: 21%;
+
+        transform:
+            scale(.72);
+
+        transform-origin:
+            bottom center;
+    }
+
+
+    .world-plant {
+        right: 2%;
+        bottom: 20%;
+
+        transform:
+            scale(.72);
+
+        transform-origin:
+            bottom right;
+    }
+
+
+    .floor-flower-cluster {
+        transform:
+            scale(.72);
+    }
+
+
+    .cluster-one {
+        left: 14%;
+    }
+
+
+    .cluster-two {
+        right: 17%;
+    }
+
+
+    .world-bunny {
+        width: 94px;
+    }
+
+
+    .world-teddy {
+        width: 98px;
+    }
+
+
+    .world-hint {
+        display: none;
+    }
+
+
+    .gift-header {
+        padding:
+            20px 15px;
+    }
+
+
+    .gift-header h2 {
+        font-size: 40px;
+    }
+
+
+    .gift-counter strong {
+        font-size: 36px;
+    }
+
+
+    .gift-counter span {
+        display: none;
+    }
+
+
+    .gift-objects {
+        width: 96vw;
+
+        height: 57vh;
+
+        grid-template-columns:
+            repeat(4,1fr);
+
+        grid-auto-rows:
+            1fr;
+
+        gap: 5px;
+    }
+
+
+    .gift-choice {
+        width: 63px;
+    }
+
+
+    .gift-bunny,
+    .gift-teddy {
+        display: none;
+    }
+
+
+    .guess-card {
+        padding:
+            22px 15px 26px;
+    }
+
+
+    .guess-bunny {
+        left: 6%;
+    }
+
+
+    .guess-teddy {
+        right: 6%;
+    }
+
+
+    .guess-input-row {
+        flex-direction:
+            column;
+    }
+
+
+    .guess-input-row .primary-button {
+        width: 100%;
+    }
+
+
+    .final-characters {
+        transform:
+            scale(.82);
+    }
+
+
+    .memory-gallery {
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap: 10px;
+    }
+
+}
+
+
+/* ============================================================
+   SHORT SCREENS
+============================================================ */
+
+@media (max-height:620px) {
+
+    .world {
+        padding: 8px;
+    }
+
+
+    .world-window {
+        height: 125px;
+    }
+
+
+    .world-shelf {
+        top: 36%;
+    }
+
+
+    .world-bunny {
+        bottom: 20%;
+    }
+
+
+    .world-teddy {
+        bottom: 20%;
+    }
+
+
+    .world-table {
+        bottom: 21%;
+    }
+
+
+    .world-plant {
+        bottom: 20%;
+    }
+
+
+    .world-hint {
+        display: none;
+    }
+
+
+    .guess-characters {
+        height: 70px;
+    }
+
+
+    .guess-present {
+        transform:
+            scale(.78);
+
+        margin:
+            -9px auto 0;
+    }
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+============================================================ */
+
+@media (prefers-reduced-motion:reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            .001ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            .001ms !important;
+
+    }
+
+}
+.back-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border: 2px solid var(--brown);
+    border-radius: 999px;
+    background: #fffdf8;
+    color: var(--brown);
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--brown-dark);
+    transition: transform .14s ease, box-shadow .14s ease;
+}
+
+.back-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 var(--brown-dark);
+}
+
+.back-pill:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--brown-dark);
+}

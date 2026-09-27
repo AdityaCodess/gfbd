@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+    <meta
+        name="theme-color"
+        content="#f7ddd6"
+    >
+    <title>For You ♡</title>
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+<body>
+
+<div id="app">
+
+    <!-- ======================================================
+         INTRO
+    ======================================================= -->
+    <section
+        id="introScene"
+        class="scene active"
+    >
+        <div class="birthday-room">
+
+            <div class="window">
+                <div class="window-sky">
+                    <span class="window-moon">☾</span>
+                    <span class="window-star star-a">✦</span>
+                    <span class="window-star star-b">✧</span>
+                </div>
+                <div class="window-frame frame-vertical"></div>
+                <div class="window-frame frame-horizontal"></div>
+                <div class="window-curtain curtain-left"></div>
+                <div class="window-curtain curtain-right"></div>
+            </div>
+
+            <div class="garland">
+                <span>●</span>
+                <span>◆</span>
+                <span>●</span>
+                <span>◆</span>
+                <span>●</span>
+                <span>◆</span>
+                <span>●</span>
+                <span>◆</span>
+            </div>
+
+            <div class="birthday-sign">
+                <div class="sign-tape"></div>
+                <span class="sign-small">FOR YOU</span>
+                <strong>happy birthday ♡</strong>
+                <span class="sign-small">01 / 19</span>
+            </div>
+
+            <div class="shelf">
+                <div class="shelf-board"></div>
+                <div class="shelf-leg leg-left"></div>
+                <div class="shelf-leg leg-right"></div>
+                <div class="shelf-item item-plant">🌿</div>
+                <div class="shelf-item item-photo">♡</div>
+                <div class="shelf-item item-teddy-mini">🧸</div>
+            </div>
+
+            <div class="wall-photo photo-one">
+                <span>♡</span>
+            </div>
+
+            <div class="wall-photo photo-two">
+                <span>✦</span>
+            </div>
+
+            <div class="balloon balloon-pink">
+                <span></span>
+            </div>
+
+            <div class="balloon balloon-yellow">
+                <span></span>
+            </div>
+
+            <div class="balloon balloon-blue">
+                <span></span>
+            </div>
+
+            <div class="side-table">
+                <div class="table-top"></div>
+                <div class="table-leg table-leg-a"></div>
+                <div class="table-leg table-leg-b"></div>
+                <div class="lamp">
+                    <div class="lamp-shade"></div>
+                    <div class="lamp-stem"></div>
+                    <div class="lamp-base"></div>
+                </div>
+            </div>
+
+            <div class="plant">
+                <div class="plant-leaf leaf-a"></div>
+                <div class="plant-leaf leaf-b"></div>
+                <div class="plant-leaf leaf-c"></div>
+                <div class="plant-leaf leaf-d"></div>
+                <div class="plant-pot"></div>
+            </div>
+
+            <button
+                id="firstGiftButton"
+                class="first-gift"
+                type="button"
+            >
+                <div class="first-gift-box">
+                    <div class="first-gift-body"></div>
+                    <div class="first-gift-lid"></div>
+                    <div class="first-gift-ribbon-v"></div>
+                    <div class="first-gift-ribbon-h"></div>
+                    <div class="first-gift-bow"></div>
+                </div>
+                <span class="present-label">your first gift</span>
+            </button>
+
+            <div
+                id="introBunny"
+                class="character bunny intro-bunny facing-right"
+            >
+                <img
+                    id="introBunnySprite"
+                    src=""
+                    alt=""
+                    draggable="false"
+                >
+            </div>
+
+            <div
+                id="introTeddy"
+                class="character teddy intro-teddy facing-left"
+            >
+                <img
+                    id="introTeddySprite"
+                    src=""
+                    alt=""
+                    draggable="false"
+                >
+            </div>
+
+            <div class="room-floor">
+                <div class="floor-rug"></div>
+
+                <div class="floor-flower flower-a">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <i></i>
+                </div>
+
+                <div class="floor-flower flower-b">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <i></i>
+                </div>
+
+                <div class="floor-flower flower-c">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <i></i>
+                </div>
+            </div>
+
+            <div class="room-message">
+                <span>made especially for you</span>
+                <button
+                    id="introHint"
+                    type="button"
+                >
+                    tap the gift to begin →
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         WEBSITE GIFT
+    ======================================================= -->
+    <section
+        id="websiteScene"
+        class="scene"
+    >
+        <div class="website-gift-world">
+
+            <div class="website-sparkles">
+                <span>✦</span>
+                <span>♡</span>
+                <span>✧</span>
+                <span>♡</span>
+            </div>
+
+            <div class="website-gift-copy">
+                <span class="tiny-title">GIFT 01 / 19</span>
+                <h2>this website ♡</h2>
+                <p>Yep. This is actually your first gift.</p>
+                <p class="small-copy">
+                    I couldn't exactly wrap it,
+                    so I made you a whole little world instead.
+                </p>
+                <button
+                    id="enterWorldButton"
+                    class="primary-button"
+                    type="button"
+                >
+                    okay, there's more →
+                </button>
+            </div>
+
+            <div
+                id="websiteBunny"
+                class="character bunny website-bunny facing-right"
+            >
+                <img
+                    id="websiteBunnySprite"
+                    src=""
+                    alt=""
+                    draggable="false"
+                >
+            </div>
+
+            <div
+                id="websiteTeddy"
+                class="character teddy website-teddy facing-left"
+            >
+                <img
+                    id="websiteTeddySprite"
+                    src=""
+                    alt=""
+                    draggable="false"
+                >
+            </div>
+
+            <div class="website-floor">
+                <div class="website-rug"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         BIRTHDAY WORLD
+    ======================================================= -->
+    <section
+        id="worldScene"
+        class="scene"
+    >
+        <div class="world">
+            <div class="world-room">
+
+                <!-- ==================================================
+                     ILLUSTRATED ROOM DECOR (NO PERSONAL PHOTOS)
+                =================================================== -->
+                <div
+                    id="worldDecor"
+                    class="world-decor"
+                ></div>
+
+                <!-- BUNTING -->
+                <div class="world-bunting">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <div class="world-title">birthday world</div>
+
+                <!-- CLOCK -->
+                <div class="world-clock">
+                    <div class="clock-face">
+                        <span class="clock-hand hour"></span>
+                        <span class="clock-hand minute"></span>
+                    </div>
+                </div>
+
+                <!-- WINDOW -->
+                <div class="world-window">
+                    <div class="world-window-sky">
+                        <div class="cloud cloud-one"></div>
+                        <div class="cloud cloud-two"></div>
+                        <div class="sun"></div>
+                        <span class="sky-spark sky-one">✦</span>
+                        <span class="sky-spark sky-two">✧</span>
+                    </div>
+                    <div class="window-cross vertical"></div>
+                    <div class="window-cross horizontal"></div>
+                </div>
+
+                <!-- SHELF -->
+                <div class="world-shelf">
+                    <div class="world-shelf-top"></div>
+                    <div class="world-shelf-support left"></div>
+                    <div class="world-shelf-support right"></div>
+
+                    <div class="shelf-decoration vase">
+                        <div class="vase-body"></div>
+                        <div class="vase-flower flower-mini">
+                            <div class="flower">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <i></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="shelf-decoration frame-mini">♡</div>
+
+                    <div class="shelf-book book-one"></div>
+                    <div class="shelf-book book-two"></div>
+                    <div class="shelf-book book-three"></div>
+                </div>
+
+                <!-- MEMORIES BOARD ON WALL -->
+                <button
+                    id="memoriesButton"
+                    class="world-object memory-object"
+                    type="button"
+                >
+                    <div class="memory-pin"></div>
+                    <div class="memory-frame">
+                        <div class="memory-picture">📸</div>
+                    </div>
+                    <small>memories</small>
+                </button>
+
+                <!-- TABLE + LAMP -->
+                <div class="world-table">
+                    <div class="world-table-top"></div>
+                    <div class="world-table-leg table-a"></div>
+                    <div class="world-table-leg table-b"></div>
+
+                    <div class="world-lamp">
+                        <div class="world-lamp-shade"></div>
+                        <div class="world-lamp-stem"></div>
+                        <div class="world-lamp-base"></div>
+                    </div>
+                </div>
+
+                <!-- LETTER FOR YOU -->
+                <button
+                    id="letterButton"
+                    class="world-object letter-object"
+                    type="button"
+                >
+                    <div class="letter-paper">
+                        <div class="letter-fold"></div>
+                        <span>✉</span>
+                    </div>
+                    <small>for you</small>
+                </button>
+
+                <!-- MAIN GIFTS ON FLOOR -->
+                <button
+                    id="mainPresentButton"
+                    class="world-object world-present"
+                    type="button"
+                >
+                    <div class="world-gift-box">
+                        <div class="world-gift-body"></div>
+                        <div class="world-gift-lid"></div>
+                        <div class="world-gift-ribbon"></div>
+                        <div class="world-gift-bow"></div>
+                    </div>
+                    <small>the gifts</small>
+                </button>
+
+                <!-- PLANT -->
+                <div class="world-plant">
+                    <div class="world-leaf leaf-one"></div>
+                    <div class="world-leaf leaf-two"></div>
+                    <div class="world-leaf leaf-three"></div>
+                    <div class="world-leaf leaf-four"></div>
+                    <div class="world-leaf leaf-five"></div>
+                    <div class="world-pot"></div>
+                </div>
+
+                <!-- FLOWER CLUSTERS -->
+                <div class="floor-flower-cluster cluster-one">
+                    <div class="flower">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <i></i>
+                    </div>
+                    <div class="flower small">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <i></i>
+                    </div>
+                    <div class="stem"></div>
+                </div>
+
+                <div class="floor-flower-cluster cluster-two">
+                    <div class="flower">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <i></i>
+                    </div>
+                    <div class="flower small">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <i></i>
+                    </div>
+                    <div class="stem"></div>
+                </div>
+
+                <!-- BUNNY -->
+                <div
+                    id="worldBunny"
+                    class="character bunny world-bunny facing-right"
+                >
+                    <img
+                        id="worldBunnySprite"
+                        src=""
+                        alt=""
+                        draggable="false"
+                    >
+                </div>
+
+                <!-- TEDDY -->
+                <div
+                    id="worldTeddy"
+                    class="character teddy world-teddy facing-left"
+                >
+                    <img
+                        id="worldTeddySprite"
+                        src=""
+                        alt=""
+                        draggable="false"
+                    >
+                </div>
+
+                <!-- FLOOR -->
+                <div class="world-floor">
+                    <div class="floor-board-line"></div>
+                    <div class="rug rug-main"></div>
+                    <div class="tiny-floor-heart heart-one">♡</div>
+                    <div class="tiny-floor-heart heart-two">♡</div>
+                    <div class="tiny-floor-heart heart-three">♡</div>
+                </div>
+
+                <div class="world-hint">
+                    <span>tap around the room ♡</span>
+                    <span class="hint-divider">·</span>
+                    <span>memories, a letter &amp; 19 gifts are waiting</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         MEMORIES (PERSONAL PHOTOS DISPLAYED HERE)
+    ======================================================= -->
+    <section
+        id="memoriesScene"
+        class="modal-scene memories-scene"
+    >
+        <div class="memories-card">
+
+            <button
+                class="close-button"
+                data-close="memoriesScene"
+                type="button"
+                aria-label="Close memories"
+            >
+                ×
+            </button>
+
+            <div class="memories-heading">
+                <span class="tiny-title">OUR LITTLE CORNER</span>
+                <h2>memories ♡</h2>
+                <p>the moments I wanted to keep right here (tap any photo)</p>
+            </div>
+
+            <div
+                id="memoryGallery"
+                class="memory-gallery"
+            ></div>
+
+            <div class="memory-caption">
+                four little pieces of us ♡
+            </div>
+
+        </div>
+
+        <!-- LIGHTBOX OVERLAY FOR FULL PHOTO VIEW -->
+        <div
+            id="memoryLightbox"
+            class="memory-lightbox hidden"
+        >
+            <button
+                id="closeLightboxButton"
+                class="close-button lightbox-close"
+                type="button"
+                aria-label="Close photo"
+            >
+                ×
+            </button>
+            <div class="lightbox-polaroid">
+                <img
+                    id="lightboxImage"
+                    src=""
+                    alt=""
+                    draggable="false"
+                >
+                <p id="lightboxCaption"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         LETTER
+    ======================================================= -->
+    <section
+        id="letterScene"
+        class="modal-scene"
+    >
+        <div class="letter-card">
+
+            <button
+                class="close-button"
+                data-close="letterScene"
+                type="button"
+                aria-label="Close letter"
+            >
+                ×
+            </button>
+
+            <span class="tiny-title">A LETTER FOR YOU</span>
+            <h2>Dear Guri ♡</h2>
+
+            <div class="letter-text">
+                <p>Hey Guri my love,</p>
+                <p>Happy birthday.</p>
+                <p>The best girl in the world!</p>
+                <p>
+                    I met you 7 months ago and I still can't believe how lucky I am to have you in my life.
+                    Ever since that day, you've made me the happiest person alive. I love you so much.
+                    Everytime I see you, I feel like the luckiest person in the world. You are my everything.
+                    A small poem for you, just to let you know how much I love you :
+                </p>
+
+                    <span>For my morning starts with your smile, and my night ends with your love.</span><br>
+                    <span>Thy heart is mine, and I am yours. You are my sunshine, my love, my life.</span><br>
+                    <span>And I promise to love you forever, and be with you through thick and thin.</span><br>
+                    <span>For you are my everything, and I will always be there for you.</span><br>
+
+                
+                <p>
+                    Love,<br>
+                    Aditya ♡
+                </p>
+            </div>
+
+            <button
+                id="letterBackButton"
+                class="primary-button"
+                type="button"
+            >
+                okay, enough emotions →
+            </button>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         GIFTS
+    ======================================================= -->
+    <section
+        id="giftScene"
+        class="scene"
+    >
+        <div class="gift-world">
+
+            <div class="gift-header">
+                <div>
+                    <div class="gift-header-top">
+                        <button
+                            id="backToWorldButton"
+                            class="back-pill"
+                            type="button"
+                        >
+                            ← room
+                        </button>
+                        <span class="tiny-title">THE GIFT GAME</span>
+                    </div>
+                    <h2>19 gifts.</h2>
+                    <p>Pick literally any mystery box and guess what you got.</p>
+                </div>
+
+                <div class="gift-header-actions">
+                    <div class="gift-counter">
+                        <strong id="giftFoundCount">01</strong>
+                        <span>/ 19 found</span>
+                    </div>
+
+                    <button
+                        id="giftGiveUpButton"
+                        class="give-up-small"
+                        type="button"
+                    >
+                        give up ♡
+                    </button>
+                </div>
+            </div>
+
+            <div
+                id="giftObjects"
+                class="gift-objects"
+            ></div>
+
+            <div
+                id="giftBunny"
+                class="character bunny gift-bunny facing-right"
+            >
+                <img
+                    id="giftBunnySprite"
+                    src=""
+                    alt=""
+                    draggable="false"
+                >
+            </div>
+
+            <div
+                id="giftTeddy"
+                class="character teddy gift-teddy facing-left"
+            >
+                <img
+                    id="giftTeddySprite"
+                    src=""
+                    alt=""
+                    draggable="false"
+                >
+            </div>
+
+            <div class="gift-floor"></div>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         GUESS
+    ======================================================= -->
+    <section
+        id="guessScene"
+        class="modal-scene guess-scene"
+    >
+        <div class="guess-card">
+
+            <button
+                id="closeGuessButton"
+                class="close-button"
+                type="button"
+                aria-label="Close guess modal"
+            >
+                ×
+            </button>
+
+            <span class="tiny-title">MYSTERY GIFT</span>
+
+            <div
+                id="guessSlotText"
+                class="guess-slot-text"
+            >
+                MYSTERY BOX 02
+            </div>
+
+            <div class="guess-characters">
+                <div
+                    id="guessBunny"
+                    class="character bunny guess-bunny facing-right"
+                >
+                    <img
+                        id="guessBunnySprite"
+                        src=""
+                        alt=""
+                        draggable="false"
+                    >
+                </div>
+
+                <div
+                    id="guessTeddy"
+                    class="character teddy guess-teddy facing-left"
+                >
+                    <img
+                        id="guessTeddySprite"
+                        src=""
+                        alt=""
+                        draggable="false"
+                    >
+                </div>
+            </div>
+
+            <div
+                id="guessPresent"
+                class="guess-present"
+            >
+                <div class="big-gift-body"></div>
+                <div class="big-gift-lid"></div>
+                <div class="big-gift-ribbon"></div>
+                <div class="big-gift-bow"></div>
+            </div>
+
+            <h2>what's inside?</h2>
+
+            <p class="guess-subtitle">
+                It could be any of the unrevealed gifts.
+            </p>
+
+            <div
+                id="heardText"
+                class="heard-text"
+            >
+                Tap the microphone when you're ready.
+            </div>
+
+            <button
+                id="speakButton"
+                class="speak-button"
+                type="button"
+            >
+                <span>🎙</span>
+                <span id="speakText">say your guess</span>
+            </button>
+
+            <div class="type-divider">
+                <span>or type it</span>
+            </div>
+
+            <div class="guess-input-row">
+                <input
+                    id="guessInput"
+                    type="text"
+                    placeholder="your guess..."
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+                <button
+                    id="guessButton"
+                    class="primary-button"
+                    type="button"
+                >
+                    guess
+                </button>
+            </div>
+
+            <div
+                id="guessResult"
+                class="guess-result"
+            ></div>
+
+            <button
+                id="nextButton"
+                class="primary-button hidden"
+                type="button"
+            >
+                back to gifts →
+            </button>
+
+            <button
+                id="giveUpButton"
+                class="give-up-button"
+                type="button"
+            >
+                okay... I give up ♡
+            </button>
+
+        </div>
+    </section>
+
+    <!-- ======================================================
+         FINAL
+    ======================================================= -->
+    <section
+        id="finalScene"
+        class="scene final-scene"
+    >
+        <div class="final-content">
+
+            <div class="final-sparkles">
+                <span>✦</span>
+                <span>♡</span>
+                <span>✧</span>
+                <span>♡</span>
+                <span>✦</span>
+            </div>
+
+            <div class="final-characters">
+                <div
+                    id="finalBunny"
+                    class="character bunny final-bunny facing-right"
+                >
+                    <img
+                        id="finalBunnySprite"
+                        src=""
+                        alt=""
+                        draggable="false"
+                    >
+                </div>
+
+                <div
+                    id="finalTeddy"
+                    class="character teddy final-teddy facing-left"
+                >
+                    <img
+                        id="finalTeddySprite"
+                        src=""
+                        alt=""
+                        draggable="false"
+                    >
+                </div>
+            </div>
+
+            <span class="tiny-title">okay okay.</span>
+            <h2>you win. ♡</h2>
+            <p>
+                No more guessing.
+                Your real gifts are waiting for you right now.
+            </p>
+
+            <div class="final-actions">
+                <div class="final-note">
+                    19 gifts. One birthday girl.
+                </div>
+                <button
+                    id="finalBackToWorldButton"
+                    class="back-pill"
+                    type="button"
+                >
+                    ← back to birthday world
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
