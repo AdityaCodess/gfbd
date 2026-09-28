@@ -3063,14 +3063,14 @@ button {
 
 .world-bunny {
     left: 18%;
-    bottom: 15%; /* lowered from 21% to touch floor */
+    bottom: 10%; /* lowered from 21% to touch floor */
     width: clamp(110px, 12vw, 165px);
     aspect-ratio: 1;
 }
 
 .world-teddy {
     left: 69%;
-    bottom: 15%; /* lowered from 21% to touch floor */
+    bottom: 10%; /* lowered from 21% to touch floor */
     width: clamp(115px, 13vw, 175px);
     aspect-ratio: 1;
 }
