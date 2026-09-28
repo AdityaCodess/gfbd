@@ -3,15 +3,18 @@
   "name": "gfbd Web App",
   "icons": [
     {
-      "src": "icon.png",
-      "type": "image/png",
+      "src": "https://picsum.photos",
+      "type": "image/jpeg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://picsum.photos",
+      "type": "image/jpeg",
       "sizes": "512x512"
     }
   ],
   "start_url": "/gfbd/",
   "id": "/gfbd/",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
   "display": "standalone",
   "orientation": "any"
 }
